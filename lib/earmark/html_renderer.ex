@@ -159,6 +159,8 @@ defmodule Earmark.HtmlRenderer do
   def link(url, text, nil),   do: ~s[<a href="#{url}">#{text}</a>]
   def link(url, text, title), do: ~s[<a href="#{url}" title="#{title}">#{text}</a>]
 
+  def mathspan(tex),        do: ~s[<script type="math/tex">#{tex}</script>]
+
   def image(path, alt, nil) do
     ~s[<img src="#{path}" alt="#{alt}"/>]
   end

@@ -125,6 +125,10 @@ defmodule Earmark.Inline do
         [ {0, match_len} ] = match
         convert_each(behead(src, match_len), context, [ result | out ])
 
+      match = Regex.run(context.rules.math, src) ->
+        [ _, match ] = match
+        out = renderer.mathspan(match)
+        convert_each(behead(src, match), context, [result | out])
 
       # text
       match = Regex.run(context.rules.text, src) ->
@@ -299,6 +303,9 @@ defmodule Earmark.Inline do
       rule_updates = Keyword.merge(rule_updates, [footnote: ~r{^\[\^(#{@inside})\]}])
     else
       rule_updates = Keyword.merge(rule_updates, [footnote: ~r{\z\A}]) #noop
+    end
+    if options.math do
+      rule_updates = Keyword.merge(rule_updates, [math: ~r{^\$\$(.*?)\$\$}])
     end
     Keyword.merge(basic_rules, rule_updates)
     |> Enum.into %{}
